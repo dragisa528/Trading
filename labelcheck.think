@@ -1,0 +1,39 @@
+# mp
+
+
+#rotaciones
+def one     = (high > high[1]) and (low > low[1]);
+def two     = (high < high[1]) and (low < low[1]);
+def three   = (high > high[1]) and (low < low[1])  or  (high > high[1]) and (low > low[1]) ;
+def four    = (high < high[1]) and (low > low[1]) or  (high < high[1]) and (low < low[1]) ;
+
+def highcnt = if   one  then highcnt[1]   + 3
+         else if   three then highcnt[1]  + 2       
+         else 0;
+
+def lowcnt = if      two  then  lowcnt[1] - 3
+          else  if   four then  lowcnt[1] - 2  
+       
+                                   else 0;
+
+input showtas = yes;
+
+plot rotaciones = ( highcnt + lowcnt) ;
+
+
+AddLabel(showtas, if (!IsNaN(rotaciones)) then "CMP " + rotaciones else "",
+if (rotaciones >= 2.00) then Color.GREEN
+else if (rotaciones <= -2.00) then Color.RED
+else if (rotaciones > rotaciones[1] and rotaciones > 0.00 and rotaciones < 2.00 and rotaciones > 0.00) then Color.DARK_GREEN
+else if (rotaciones < rotaciones[1] and rotaciones < 0.00 and rotaciones > -2.00 and rotaciones < 0.00) then Color.DARK_RED
+else if (rotaciones >= rotaciones[1] and rotaciones > 0.00) then Color.GRAY else Color.DARK_GRAY);
+
+
+
+rotaciones.SetPaintingStrategy(PaintingStrategy.HISTOGRAM);
+rotaciones.AssignValueColor(
+ if ( ( rotaciones >= 2.00) ) then Color.GREEN                          
+ else if ( rotaciones < -2.00) then Color.RED
+ else if (rotaciones > rotaciones[1] and rotaciones > 0.00  and rotaciones < 2.00 and rotaciones > 0.00)  then Color.DARK_GREEN
+ else if (rotaciones < rotaciones[1] and rotaciones < 0.00  and rotaciones > -2.00 and rotaciones < 0.00)  then Color.DARK_RED 
+ else if rotaciones >= rotaciones[1] and rotaciones > 0.00 then Color.GRAY else Color.DARK_GRAY);
